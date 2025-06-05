@@ -19,6 +19,16 @@ jobs:
           mkdir -p output
           docker run --rm -v $(pwd)/output:/output lab8-image
       
+      - name: Check build log
+        run: |
+          if [ -s output/build_log.txt ]; then
+            echo "Build log contains errors!"
+            cat output/build_log.txt
+            exit 1
+          else
+            echo "Build successful!"
+          fi
+      
       - name: Upload build log
         uses: actions/upload-artifact@v3
         with:
