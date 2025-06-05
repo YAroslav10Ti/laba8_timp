@@ -6,6 +6,9 @@ WORKDIR /app
 
 COPY main.cpp .
 
-RUN g++ main.cpp -o app 2> build_log.txt
+# Компилируем и сохраняем лог
+RUN g++ main.cpp -o app 2> build_log.txt || touch build_log.txt
 
-CMD ["sh", "-c", "cp build_log.txt /output"]
+# Создаём директорию для вывода и копируем лог
+RUN mkdir -p /output
+CMD cp build_log.txt /output/ && exit 0
