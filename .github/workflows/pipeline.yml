@@ -11,12 +11,15 @@ jobs:
       - name: Build Docker image
         run: docker build -t lab8 .
       
-      - name: Run container and collect logs
+      - name: Prepare output directory
+        run: mkdir -p workspace/output
+      
+      - name: Run container
         run: |
-          mkdir -p workspace/output
           docker run --rm -v $(pwd)/workspace/output:/output lab8
-          echo "=== Build Log Content ==="
-          cat workspace/output/build_log.txt || echo "No log found"
+          echo "=== Build Log ==="
+          cat workspace/output/build_log.txt || echo "Log file not found"
+          [ -s workspace/output/build_log.txt ] || echo "Log file is empty"
           
       - name: Upload results
         uses: actions/upload-artifact@v3

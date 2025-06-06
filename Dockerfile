@@ -7,10 +7,9 @@ RUN apt-get update && \
 WORKDIR /app
 COPY main.cpp .
 
-RUN g++ main.cpp -o app 2> build_log.txt || echo "Compilation successful" > build_log.txt
-
-RUN echo "Debug: Contents of /app:" && ls -la && \
-    echo "Debug: build_log.txt exists?" && [ -f build_log.txt ] && cat build_log.txt
+# Явно перенаправляем вывод компиляции
+RUN { g++ main.cpp -o app 2>&1; echo $? > exit_code; } | tee build_log.txt
+RUN [ "$(cat exit_code)" = "0" ] && echo "Compilation successful" >> build_log.txt
 
 VOLUME /output
-CMD cp build_log.txt /output/ && echo "File copied successfully" && sleep 1
+CMD cp build_log.txt /output/ && echo "Log file copied to /output" && sleep 1
