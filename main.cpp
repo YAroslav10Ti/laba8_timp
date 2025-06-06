@@ -1,6 +1,2 @@
 #include <iostream>
-
-int main() {
-    std::cout << "Hello from Docker Container!" << std::endl;
-    return 0;
-}
+int main() { std::cout << "SUCCESS\n"; return 0; }

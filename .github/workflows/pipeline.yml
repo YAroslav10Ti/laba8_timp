@@ -1,0 +1,26 @@
+name: CI Pipeline
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Build Docker image
+        run: |
+          docker build -t lab8 .
+          mkdir -p output
+          
+      - name: Run container
+        run: |
+          docker run --rm -v $(pwd)/output:/output lab8 || true
+          echo "=== Build Log ==="
+          cat output/build_log.txt || echo "Log file not found"
+          
+      - name: Upload results
+        uses: actions/upload-artifact@v3
+        with:
+          name: results
+          path: output/
