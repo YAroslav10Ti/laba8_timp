@@ -7,7 +7,10 @@ RUN apt-get update && \
 WORKDIR /app
 COPY main.cpp .
 
-RUN g++ main.cpp -o app 2> build_log.txt || echo "No errors" > build_log.txt
+RUN g++ main.cpp -o app 2> build_log.txt || echo "Compilation successful" > build_log.txt
+
+RUN echo "Debug: Contents of /app:" && ls -la && \
+    echo "Debug: build_log.txt exists?" && [ -f build_log.txt ] && cat build_log.txt
 
 VOLUME /output
-CMD cp build_log.txt /output/ && sleep 1
+CMD cp build_log.txt /output/ && echo "File copied successfully" && sleep 1

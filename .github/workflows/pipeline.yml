@@ -9,18 +9,17 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Build Docker image
+        run: docker build -t lab8 .
+      
+      - name: Run container and collect logs
         run: |
-          docker build -t lab8 .
-          mkdir -p output
-          
-      - name: Run container
-        run: |
-          docker run --rm -v $(pwd)/output:/output lab8 || true
-          echo "=== Build Log ==="
-          cat output/build_log.txt || echo "Log file not found"
+          mkdir -p workspace/output
+          docker run --rm -v $(pwd)/workspace/output:/output lab8
+          echo "=== Build Log Content ==="
+          cat workspace/output/build_log.txt || echo "No log found"
           
       - name: Upload results
         uses: actions/upload-artifact@v3
         with:
           name: results
-          path: output/
+          path: workspace/output/
